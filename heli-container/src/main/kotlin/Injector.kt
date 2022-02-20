@@ -40,10 +40,11 @@ object Injector {
      * initialize the injector framework
      */
     private fun initFramework(mainClass: KClass<*>) {
-        val classes = getClasses(mainClass.java.packageName)
+        val classes = getClasses(mainClass)
 
         classes
             .filter {
+                // TODO 임시조치 Kt로 끝나는 파일 이름 제외 로직 개선 필요
                 !it.simpleName!!.endsWith("Kt") && it.hasAnnotation<Component>()
             }
             .forEach { clazz ->
@@ -64,8 +65,8 @@ object Injector {
     /**
      * Get all the classes for the input package
      */
-    fun getClasses(packageName: String): Collection<KClass<*>> {
-        return ReflectionHelper.findClassesByPackageName(packageName)
+    private fun getClasses(mainClass: KClass<*>): Collection<KClass<*>> {
+        return ReflectionHelper.findClassesByPackageName(mainClass)
     }
 
     fun <T : Any> getBeanInstance(interfaceClass: KClass<T>, fieldName: String = "", qualifier: String = ""): Any {
@@ -82,7 +83,7 @@ object Injector {
         }
     }
 
-    fun getImplementationClass(interfaceClass: KClass<*>, fieldName: String, qualifier: String): KClass<*> {
+    private fun getImplementationClass(interfaceClass: KClass<*>, fieldName: String, qualifier: String): KClass<*> {
         val implementationClasses = diMap.entries
             .filter { entry ->
                 entry.value == interfaceClass

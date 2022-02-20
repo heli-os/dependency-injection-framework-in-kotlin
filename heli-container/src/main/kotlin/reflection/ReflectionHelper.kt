@@ -1,6 +1,5 @@
 package reflection
 
-import Application
 import java.io.File
 import java.lang.reflect.Field
 import kotlin.reflect.KClass
@@ -10,7 +9,9 @@ import kotlin.reflect.KClass
  */
 object ReflectionHelper {
 
-    fun findClassesByPackageName(packageName: String): Collection<KClass<*>> {
+    fun findClassesByPackageName(mainClass: KClass<*>): Collection<KClass<*>> {
+        val packageName = mainClass.java.packageName
+
         val name: String = if (!packageName.startsWith('/')) {
             "/$packageName".replace('.', '/')
         } else {
@@ -18,7 +19,7 @@ object ReflectionHelper {
         }
 
         // Get a File object for the package
-        val url = Application::class.java.getResource(name)!!
+        val url = mainClass.java.getResource(name)!!
         val directory = File(url.file)
 
         if (!directory.exists()) {
