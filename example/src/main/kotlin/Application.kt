@@ -4,6 +4,6 @@
 class Application
 
 fun main() {
-    Injector.startApplication(Application::class)
-    Injector.getService(UserAccountClient::class).displayUserAccount()
+    HeliContainer.startApplication(Application::class)
+    HeliContainer.getService(UserAccountClient::class).displayUserAccount()
 }

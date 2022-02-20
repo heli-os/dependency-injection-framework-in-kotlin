@@ -1,5 +1,6 @@
 import annotation.Component
 import reflection.ReflectionHelper
+import util.autowire
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.hasAnnotation
@@ -12,7 +13,7 @@ import kotlin.reflect.jvm.jvmName
  *
  * @Author Heli
  */
-object Injector {
+object HeliContainer {
 
     private val diMap = mutableMapOf<KClass<*>, KClass<*>>()
     private val applicationScope = mutableMapOf<KClass<*>, Any>()
@@ -58,7 +59,7 @@ object Injector {
                 }
                 val classInstance = clazz.createInstance()
                 applicationScope[clazz] = classInstance
-                InjectionUtil.autowire(clazz, classInstance)
+                autowire(clazz, classInstance)
             }
     }
 
